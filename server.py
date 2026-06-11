@@ -66,20 +66,21 @@ def init_db() -> None:
                 )
                 """
             )
+        timestamp_type = "timestamptz default now()" if IS_POSTGRES else "text default current_timestamp"
         conn.execute(
-            """
+            f"""
             create table if not exists students (
               id text primary key,
               class_code text not null,
               student_no text not null,
               name text not null,
-              created_at text default current_timestamp,
+              created_at {timestamp_type},
               unique(class_code, student_no)
             )
             """
         )
         conn.execute(
-            """
+            f"""
             create table if not exists word_attempts (
               id text primary key,
               class_code text not null,
@@ -94,7 +95,7 @@ def init_db() -> None:
               is_correct integer not null,
               mastery text,
               mode text,
-              created_at text default current_timestamp
+              created_at {timestamp_type}
             )
             """
         )
@@ -206,15 +207,18 @@ class WordBaseHandler(SimpleHTTPRequestHandler):
         if any(not str(payload.get(key, "")).strip() for key in required):
             return send_json(self, {"error": "缺少答题记录字段"}, 400)
         attempt_id = str(payload.get("id") or f"attempt-{int(time.time() * 1000)}")
+        insert_attempt = "insert into" if IS_POSTGRES else "insert or ignore into"
+        ignore_duplicate = "on conflict(id) do nothing" if IS_POSTGRES else ""
         with db() as conn:
             execute(
                 conn,
-                """
-                insert or ignore into word_attempts(
+                f"""
+                {insert_attempt} word_attempts(
                   id, class_code, student_id, student_name, student_no, word_id, term,
                   source, selected_meaning, correct_meaning, is_correct, mastery, mode
                 )
                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                {ignore_duplicate}
                 """,
                 (
                     attempt_id,
