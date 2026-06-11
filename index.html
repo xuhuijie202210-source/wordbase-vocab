@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>词库学习 App 原型</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div>
+            <div class="brand-title">WordBase</div>
+            <div class="brand-subtitle">高中英语词库</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active" data-view="student-home">学生端首页</button>
+          <button class="nav-item" data-view="libraries">教材词库</button>
+          <button class="nav-item" data-view="personal">我的词库</button>
+          <button class="nav-item" data-view="review">单词复习</button>
+          <button class="nav-item" data-view="admin">后台管理</button>
+        </nav>
+
+        <div class="sidebar-card">
+          <div class="eyebrow">设计原则</div>
+          <p>学生用班级码加入班级，答题记录按班级和学生维度沉淀。</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="topbar">
+          <div>
+            <div class="eyebrow">极简效率风 · 班级码原型 v2</div>
+            <h1 id="pageTitle">学生端首页</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="sync-pill" id="publishState">官方词库：已发布</span>
+            <button class="ghost-btn" id="resetDemo">重置演示数据</button>
+          </div>
+        </section>
+
+        <section class="view active" id="student-home"></section>
+        <section class="view" id="libraries"></section>
+        <section class="view" id="personal"></section>
+        <section class="view" id="review"></section>
+        <section class="view" id="admin"></section>
+      </main>
+    </div>
+
+    <template id="wordRowTemplate">
+      <button class="word-row">
+        <span class="mastery-dot"></span>
+        <span class="word-main"></span>
+        <span class="word-meaning"></span>
+      </button>
+    </template>
+
+    <script src="./vocab-data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
